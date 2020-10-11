@@ -4,15 +4,15 @@ from multiprocessing import Pool
 import pandas as pd
 
 def feature_name():
-    readFile = open('F:\\오석재\\yara-bg\\parser_name.txt', 'r')
+    readFile = open('.\\yara_config\\packer_parser_name.txt', 'r')
     featureNameList = [i.replace('\n','') for i in readFile]
     readFile.close()
     return featureNameList
 
 
 def test_getYaraResult(yaraCheckFilePath, fileName):
-    yaraProgramPath = '../yara-bg/yara64.exe'                    # yara 실행파일 위치
-    yaraRulePath = '../yara-bg/rules/includeRules.yar'           # yara 룰셋 저장 경로
+    yaraProgramPath = '.\\yara_config\\yara64.exe'                    # yara 실행파일 위치
+    yaraRulePath = '.\\yara_config\\rules\\includeRules.yar'           # yara 룰셋 저장 경로
     
     yaraResult = {}
     yaraResultCall = subprocess.Popen([yaraProgramPath, yaraRulePath, yaraCheckFilePath], stdout=PIPE).communicate()[0]

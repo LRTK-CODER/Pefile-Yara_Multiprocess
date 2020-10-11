@@ -5,9 +5,9 @@ import pandas as pd
 if __name__ == '__main__':
     startTime = time.time()
     
-    dir = '..\\yara-bg\\dataset' # 디렉토리 설정하면 해당 디렉토리 하위까지 탐색
+    dir = '.\\dataset' # 디렉토리 설정하면 해당 디렉토리 하위까지 탐색
     result_file = '.\\save_4.csv'
-    failed_extract = '.\\failed_extract'
+    failed_extract = '.\\dataset\\failed_extract'
     dir_file_list = cspefile.dir_explorer(dir)
 
     for file_num in range(len(dir_file_list[1][:10])):
