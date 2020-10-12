@@ -18,7 +18,6 @@ def test_getYaraResult(yaraCheckFilePath, fileName):
     yaraResultCall = subprocess.Popen([yaraProgramPath, '-w', yaraRulePath, yaraCheckFilePath], stdout=PIPE).communicate()[0]
     yaraResultCall = yaraResultCall.decode('utf-8').split(f' {yaraCheckFilePath}\r\n')
     del yaraResultCall[-1]
-    # print(yaraResultCall)
 
     featureNameList = feature_name()
 
