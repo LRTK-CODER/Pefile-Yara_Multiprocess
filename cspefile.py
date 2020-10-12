@@ -11,20 +11,39 @@ import time
 import multiprocessing as mp
 
 __dos_h_format__ = ('IMAGE_DOS_HEADER',
-    ('e_magic', 'e_cblp', 'e_cp',
-    'e_crlc', 'e_cparhdr', 'e_minalloc',
-    'e_maxalloc', 'e_ss', 'e_sp', 'e_csum',
-    'e_ip', 'e_cs', 'e_lfarlc', 'e_ovno', 'e_res',
-    'e_oemid', 'e_oeminfo', 'e_res2',
-    'e_lfanew'))
+    (
+    # 'e_magic', 
+    'e_cblp', 
+    'e_cp',
+    # 'e_crlc', 
+    # 'e_cparhdr', 
+    'e_minalloc',
+    # 'e_maxalloc', 
+    # 'e_ss', 
+    # 'e_sp', 
+    # 'e_csum',
+    # 'e_ip', 
+    # 'e_cs', 
+    # 'e_lfarlc', 
+    'e_ovno', 
+    # 'e_res',
+    # 'e_oemid', 
+    # 'e_oeminfo', 
+    # 'e_res2',
+    'e_lfanew'
+    ))
     
 __nt_h_format__ = ('IMAGE_NT_HEADERS', ('Signature'))
 
 __file_h_format__ = ('IMAGE_FILE_HEADER',
-        ('Machine', 'NumberOfSections',
-        'TimeDateStamp', 'PointerToSymbolTable',
-        'NumberOfSymbols', 'SizeOfOptionalHeader',
-        'Characteristics'))
+        ('Machine', 
+        'NumberOfSections',
+        # 'TimeDateStamp', 
+        'PointerToSymbolTable',
+        'NumberOfSymbols', 
+        'SizeOfOptionalHeader',
+        # 'Characteristics'
+        ))
 
 __file_h_characteristics__ = {
     'IMAGE_FILE_RELOCS_STRIPPED':          0x0001,
@@ -86,7 +105,7 @@ __optional_h_format__ = ('IMAGE_OPTIONAL_HEADER',
         'MajorImageVersion', 'MinorImageVersion',
         'MajorSubsystemVersion', 'MinorSubsystemVersion',
         'Reserved1', 'SizeOfImage', 'SizeOfHeaders',
-        'CheckSum', 'Subsystem', 'DllCharacteristics',
+        'CheckSum', 'Subsystem', #'DllCharacteristics',
         'SizeOfStackReserve', 'SizeOfStackCommit',
         'SizeOfHeapReserve', 'SizeOfHeapCommit',
         'LoaderFlags', 'NumberOfRvaAndSizes', 'BaseOfData'))
@@ -101,7 +120,7 @@ __optional_h64_format__ = ('IMAGE_OPTIONAL_HEADER',
         'MajorImageVersion', 'MinorImageVersion',
         'MajorSubsystemVersion', 'MinorSubsystemVersion',
         'Reserved1', 'SizeOfImage', 'SizeOfHeaders',
-        'CheckSum', 'Subsystem', 'DllCharacteristics',
+        'CheckSum', 'Subsystem', #'DllCharacteristics',
         'SizeOfStackReserve', 'SizeOfStackCommit',
         'SizeOfHeapReserve', 'SizeOfHeapCommit',
         'LoaderFlags', 'NumberOfRvaAndSizes' ))
@@ -247,52 +266,26 @@ __dbg_dir_format__ = ('IMAGE_DEBUG_DIRECTORY',
         'PointerToRawData'))
         
 __functions__ = ['dos_h(pe,dic)',
-                 'nt_h(pe,dic)',
+                 # 'nt_h(pe,dic)',
                  'file_h(pe,dic)',
                  'optional_h(pe,dic)',
-                 # 'data_dir(pe,dic)',
                  # 'import_desc(pe,dic)',
                  # 'delay_import_desc(pe,dic)',
                  'section_h(pe,dic)',
                  'tls_dir(pe,dic)',
+                 'data_dir(pe,dic)'
                  # 'load_cfg(pe,dic)',
                  # 'debug_info(pe,dic)'
                  ]
 
-# def get_md5(filename):
-#     md5 = hl.md5()
+def get_md5(filename):
+    md5 = hl.md5()
     
-#     with open(filename, 'rb') as afile:
-#         buf = afile.read()
-#         md5.update(buf)
+    with open(filename, 'rb') as afile:
+        buf = afile.read()
+        md5.update(buf)
 
-#     return md5.hexdigest()
-
-def dir_explorer(dir) : # 생성된 html파일 경로 list에 저장 함수
-    dir_file_list = [],[],[]
-    for path, dirs, files in os.walk(dir):
-        for file in files:
-            if path.split('\\')[-1].startswith('malware') == True :
-                dir_file_list[0].append('1')
-                dir_file_list[1].append(path+'\\'+file)
-                dir_file_list[2].append(file)
-            elif path.split('\\')[-1].startswith('goodware') == True :
-                dir_file_list[0].append('0')
-                dir_file_list[1].append(path+'\\'+file)
-                dir_file_list[2].append(file)
-            else:
-                continue
-    
-    return dir_file_list
-
-def printer(title, offsets, data_dict) :
-    return
-    
-# def printer(title, offsets, data_dict) :
-    # print(title)
-    
-    # for i,(key, value) in enumerate(data_dict.items()):
-        # print(str(offsets[i]).ljust(20), key.ljust(55).rjust(40), value)
+    return md5.hexdigest()
 
 def dos_h(pe,dic) :
     title = 'DOS HEADER INFO\n'
@@ -301,15 +294,11 @@ def dos_h(pe,dic) :
     offsets = []    # offsets값 저장
     data_dict = {}  # 필드명 : 값 형태로 저장
 
-    i = 0; j = 14;
-    while(1):
-        for field in __dos_h_format__[1][i:j]:
-            offsets.append([hex(eval(form.format('FileOffset'))),      # 전역 offset 추출
-                            hex(eval(form.format('Offset')))])         # 지역 offset 추출  
-            data_dict['[DH]'+field] =  hex(eval(form.format('Value')))             # {필드명 : 값} 형태로 dict 자료형으로 저장 
-        i = j+1; j = i+2;
-        if i > 18 :
-            break
+    for field in __dos_h_format__[1]:
+        offsets.append([hex(eval(form.format('FileOffset'))),      # 전역 offset 추출
+                        hex(eval(form.format('Offset')))])         # 지역 offset 추출  
+        data_dict['[DH]'+field] =  hex(eval(form.format('Value')))             # {필드명 : 값} 형태로 dict 자료형으로 저장 
+
 
     printer(title, offsets, data_dict)
     return data_dict
@@ -386,16 +375,19 @@ def optional_h(pe,dic) :
     
     return data_dict
 
-def data_dir(pe,dic) :
+def data_dir(pe,dic) : ############### tls만 살려!!!!!!!!!!!!~!
     title = 'DIRECTORIES INFO\n'
     form = 'dic[\'Directories\'][i][field][\'{}\']'         # dict 자료형으로 저장 된 값 추출 형식 지정
     offsets = []    # offsets값 저장
     data_dict = {}  # 필드명 : 값 형태로 저장
-    for i in range(len(dic['Directories'])):
-        for field in ['VirtualAddress','Size']:
-            offsets.append([hex(eval(form.format('FileOffset'))),      # 전역 offset 추출
-                            hex(eval(form.format('Offset')))])         # 지역 offset 추출  
-            data_dict['[DIR]'+'({})'.format(dic['Directories'][i]['Structure'].lstrip('IMAGE_'))+field] = hex(eval(form.format('Value')))  # {필드명 : 값} 형태로 dict 자료형으로 저장 
+
+    for tls in dic['Directories']:   
+        if tls['Structure'] == 'IMAGE_DIRECTORY_ENTRY_TLS':
+            offsets.append([hex(tls['VirtualAddress']['FileOffset']),
+                            hex(tls['VirtualAddress']['Offset'])])
+            data_dict['[DIR]'+'{}'.format(tls['Structure'].lstrip('IMAGE_'))] = hex(tls['VirtualAddress']['Value'])  # {필드명 : 값} 형태로 dict 자료형으로 저장
+            break
+    
     
     printer(title, offsets, data_dict)
     
@@ -548,9 +540,7 @@ def section_h(pe,dic) :
     offsets = []    # offsets값 저장
     data_dict = {}  # 필드명 : 값 형태로 저장
     c_sec = 0
-    
-    offsets.append(['none','none'])
-    data_dict['[SH]NumberOfSections'] = len(dic['PE Sections'])###### 첫번째 피처
+
     
     for i in range(len(dic['PE Sections'])):
         characteristics = []
@@ -811,7 +801,7 @@ def test_BAK(pe,dic):
     print('소요시간>>>',end_time-start_time)  
 
 
-def pe_structure(result_file,failed_extract,good_or_bad,full_path,vir_file):
+def pe_structure(failed_extract,good_or_bad,full_path,vir_file):
     if not os.path.exists(failed_extract):
         os.system('md \"{}\"'.format(failed_extract))
         
@@ -824,19 +814,20 @@ def pe_structure(result_file,failed_extract,good_or_bad,full_path,vir_file):
     label = good_or_bad
     
     data_dict = {}
-    data_dict['Label'] = label
+    # data_dict['ID'] = get_md5(filename)
     data_dict['Filename'] = filename
         
-    print('filename >>>',filename)
-        
+    # print('추출대상 >>>',filename)
+    
     try:
-        pe = pefile.PE(filename) 
+        pe = pefile.PE(filename)
+        dic = pe.dump_dict()
     except:
-        print('추출실패 >>> {}'.format(filename))
         os.system('copy \"{0}\" {1}'.format(filename,failed_extract))
-        
-    dic = pe.dump_dict()
-
+        return 0
+    
+###################################################################################
+    
     for i in range(0,len(__functions__)):
         try:
             data_dict.update(eval(__functions__[i]))
@@ -849,26 +840,47 @@ def pe_structure(result_file,failed_extract,good_or_bad,full_path,vir_file):
             
     # input(filename)
     # os.system('cls')
+    data_dict['Label'] = label
+    
+###################################################################################
 
     data_frame = pd.DataFrame([data_dict],index=[vir_file])
-
+    
+    
     return data_frame
 
-    # if not os.path.exists(result_file):
-    #     data_frame.to_csv(result_file, mode='w', index=False, encoding='utf-8-sig')
-    # else:
-    #     data_frame.to_csv(result_file, mode='a', index=False, header=False, encoding='utf-8-sig')
-                
-    # print('\'{}\'추출완료.\n'.format(filename))
 
+def printer(title, offsets, data_dict) :
+    return
+    
+# def printer(title, offsets, data_dict) :
+    # print(title)
+    # for i,(key, value) in enumerate(data_dict.items()):
+        # print(str(offsets[i]).ljust(20), key.ljust(55).rjust(40), value)
 
+def dir_explorer(dir) : # 생성된 html파일 경로 list에 저장 함수
+    dir_file_list = [],[],[]
+    for path, dirs, files in os.walk(dir):
+        for file in files:
+            if path.split('\\')[-1].startswith('malware') == True :
+                dir_file_list[0].append('1')
+                dir_file_list[1].append(path+'\\'+file)
+                dir_file_list[2].append(file)
+            elif path.split('\\')[-1].startswith('goodware') == True :
+                dir_file_list[0].append('0')
+                dir_file_list[1].append(path+'\\'+file)
+                dir_file_list[2].append(file)
+            else:
+                continue
+    
+    return dir_file_list
 
 
 if __name__ == '__main__' :
     os.system('cls')
     
-    dir = 'D:\\DATASET\\e_sang\\악성_이상' # 디렉토리 설정하면 해당 디렉토리 하위까지 탐색
-    result_file = '..\\save_4.csv'
+    dir = 'D:\\DATASET\\for_test\\분류완료[315099-1798(중복)=313301개]\\_대회_학습용_데이터셋_[10000개]\\[10000개]train_set' # 디렉토리 설정하면 해당 디렉토리 하위까지 탐색
+    result_file = '..\\대회용데이터셋추출.csv'
     failed_extract = '..\\failed_extract'
     
     dir_file_list = dir_explorer(dir) # 디렉토리 내 모든 vir파일 탐색 후 list up
@@ -878,65 +890,20 @@ if __name__ == '__main__' :
         full_path = dir_file_list[1][file_num] # vir 파일의 절대경로
         vir_file = dir_file_list[2][file_num] # vir 파일의 이름
 
-        pe_structure(result_file,failed_extract,good_or_bad,full_path,vir_file)
-
-    
-##################################################    
-    # with open('./{}_result.txt'.format(filename), 'w') as afile: # 결과 txt파일로 출력 테스트
-        # afile.write(str(pe)) 
+        data_frame = pe_structure(failed_extract,good_or_bad,full_path,vir_file)
         
-    # get_keys()
-    
-    # input('')
-    # os.system('cls')        
-  
-  
-###################################################
-
-    # test()
-    
-    # for i in range(len(dic['Debug information'])):  
-        # print(i)
-        # pp(dic['Debug information'][i])
-        # print('')
-    
-    # for i in range(len(pe.DIRECTORY_ENTRY_DEBUG)):
-        # pp(pe.DIRECTORY_ENTRY_DEBUG[i].entry)
-        # print('')
-    
-    
-    # for i in range(len(pe.DIRECTORY_ENTRY_DEBUG)):
-        # pp(pe.DIRECTORY_ENTRY_DEBUG[i].struct.dump_dict())
-        # if pe.DIRECTORY_ENTRY_DEBUG[i].entry is not None:
-            # pp(pe.DIRECTORY_ENTRY_DEBUG[i].entry.dump_dict())
-        # else:
-            # print(pe.DIRECTORY_ENTRY_DEBUG[i].entry)
-            
-    # input('')
-    # os.system('cls') 
-    
-    # index_list = get_md5(filename)
+        if str(type(data_frame)) == '<class \'pandas.core.frame.DataFrame\'>':   # pefile이 터지는 경우 data_frame은 0
+            print('[{0} / {1}] 추출완료.\n'.format(file_num+1,len(dir_file_list[1])))
+                
+            if not os.path.exists(result_file):
+                data_frame.to_csv(result_file, mode='w', index=False, encoding='utf-8-sig')
+            else:
+                data_frame.to_csv(result_file, mode='a', index=False, header=False, encoding='utf-8-sig')
+        else:
+            print('[{0} / {1}] 추출실패.\n'.format(file_num+1,len(dir_file_list[1])))
+            continue
 
 
-#    for i in __dos_h_format__[1]:
-#        print(i,dic['NT_HEADERS'][i]['Value'])
-    ##print(dic['NT_HEADERS'])
-
-    
-    # for i in range(len(pe.sections)):
-        # print(pe.sections[i].__field_offsets__)
-        
-
-    # with open('.txt', 'w') as afile:
-        # afile.write(str(dic))
-
-    #df = pd.DataFrame(arr)
-    
-    # 비교
-    ##print(pe.sections[0].get_entropy())
-    ##print(dic['PE Sections'][0]['Entropy'])
-    
-    # print(pe.sections[0].get_hash_md5()) # 섹션별 md5해시값 추출
-    
-    #dos_h(pe)
-    #input("")
+'''
+    추후에 tls콜백 주소와 tls엔트리를 비교하는 피처를 필요시 제작할 것
+'''

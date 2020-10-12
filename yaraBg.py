@@ -4,7 +4,7 @@ from multiprocessing import Pool
 import pandas as pd
 
 def feature_name():
-    readFile = open('.\\yara_config\\packer_parser_name.txt', 'r')
+    readFile = open('.\\yara_config\\parser_name.txt', 'r')
     featureNameList = [i.replace('\n','') for i in readFile]
     readFile.close()
     return featureNameList
@@ -15,7 +15,7 @@ def test_getYaraResult(yaraCheckFilePath, fileName):
     yaraRulePath = '.\\yara_config\\rules\\includeRules.yar'           # yara 룰셋 저장 경로
     
     yaraResult = {}
-    yaraResultCall = subprocess.Popen([yaraProgramPath, yaraRulePath, yaraCheckFilePath], stdout=PIPE).communicate()[0]
+    yaraResultCall = subprocess.Popen([yaraProgramPath, '-w', yaraRulePath, yaraCheckFilePath], stdout=PIPE).communicate()[0]
     yaraResultCall = yaraResultCall.decode('utf-8').split(f' {yaraCheckFilePath}\r\n')
     del yaraResultCall[-1]
     # print(yaraResultCall)

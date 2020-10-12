@@ -65,28 +65,17 @@ rule banbra : banker
         #a > 3 and #b > 3 and #c > 3 and #d > 3 and #e > 3
 }
 
-rule Borland
-{
-      meta:
-		author="malware-lu"
-	strings:
-		$patternBorland = "Borland" wide ascii
-	condition:
-		$patternBorland
-}
+// rule Borland
+// {
+//       meta:
+// 		author="malware-lu"
+// 	strings:
+// 		$patternBorland = "Borland" wide ascii
+// 	condition:
+// 		$patternBorland
+// }
 
-// 20150909 - Issue #39 - Commented because of High FP rate
-/*
-rule java
-{
-      meta:
-		author="malware-lu"
-	strings:
-		$patternjava = "java" wide ascii
-	condition:
-		$patternjava
-}
-*/
+
 rule MSLRHv032afakePCGuard4xxemadicius
 {
       meta:
@@ -3277,16 +3266,16 @@ condition:
 }
 
 
-rule NETDLLMicrosoft
-{
-      meta:
-		author="malware-lu"
-strings:
-		$a0 = { 00 00 00 00 00 00 00 00 5F 43 6F 72 44 6C 6C 4D 61 69 6E 00 6D 73 63 6F 72 65 65 2E 64 6C 6C 00 00 ?? 00 00 FF 25 }
+// rule NETDLLMicrosoft
+// {
+//       meta:
+// 		author="malware-lu"
+// strings:
+// 		$a0 = { 00 00 00 00 00 00 00 00 5F 43 6F 72 44 6C 6C 4D 61 69 6E 00 6D 73 63 6F 72 65 65 2E 64 6C 6C 00 00 ?? 00 00 FF 25 }
 
-condition:
-		$a0
-}
+// condition:
+// 		$a0
+// }
 
 
 rule MSLRH: Packer PEiD
@@ -9531,16 +9520,16 @@ condition:
 }
 
 
-rule NETexecutableMicrosoft
-{
-      meta:
-		author="malware-lu"
-strings:
-		$a0 = { 00 00 00 00 00 00 00 00 5F 43 6F 72 45 78 65 4D 61 69 6E 00 6D 73 63 6F 72 65 65 2E 64 6C 6C 00 00 00 00 00 FF 25 }
+// rule NETexecutableMicrosoft
+// {
+//       meta:
+// 		author="malware-lu"
+// strings:
+// 		$a0 = { 00 00 00 00 00 00 00 00 5F 43 6F 72 45 78 65 4D 61 69 6E 00 6D 73 63 6F 72 65 65 2E 64 6C 6C 00 00 00 00 00 FF 25 }
 
-condition:
-		$a0
-}
+// condition:
+// 		$a0
+// }
 
 
 rule tElockv098

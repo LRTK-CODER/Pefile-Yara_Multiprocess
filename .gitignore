@@ -1,2 +1,4 @@
 dataset/
+dataset_backup/
+gitignore/
 a.txt
